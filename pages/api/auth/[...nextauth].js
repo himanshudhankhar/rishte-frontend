@@ -8,7 +8,7 @@ export default NextAuth({
   },
   providers: [
     Providers.Credentials({
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         //golang api for login
         const email = credentials.email;
         const password = credentials.password;
@@ -18,36 +18,18 @@ export default NextAuth({
           },
         });
         var err, user;
-        await instance
+        let response = await instance
           .post("http://localhost:5000/login", {
             Username: email,
             password: password,
           })
-          .then(function (response) {
-            console.log(response.data);
-            console.log(response.status);
-            const data = response.data;
-            if (data.success == false) {
-              //todo for failure
-              err = new Error("User Details invalid");
-              return;
-            }
-            if (data.success == true) {
-              console.log("reached here");
-              user = { username: email };
-              return { username: email };
-            }
-          })
-          .catch(function (error) {
-            //Todo for 500
-            err = new Error("Internal server error");
-            return;
-          });
-
-        if (user) {
-          return user;
+        
+        console.log(response.data)
+        let userData = response.data;
+        if (userData.success) {
+          return {email: userData.username}
         } else {
-          throw err;
+          throw new Error(userData.error) 
         }
       },
     }),

@@ -2,6 +2,7 @@ import styles from "../styles/Home.module.css";
 import { getSession, signOut } from "next-auth/client";
 import { useEffect } from "react/cjs/react.development";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function Home() {
   function handleLogout() {
@@ -20,6 +21,17 @@ export default function Home() {
     <div className={styles.container}>
       <button onClick={handleLogout}>Logout</button>
       <h1>home page with login</h1>
+      <div style={{ display: "flex", flexDirection: "column", flexWrap: "wrap" }}>
+        <Link href="/profile">
+          <button>Profile</button>
+        </Link>
+        <Link href="/matches">
+          <button>Matches</button>
+        </Link>
+        <Link href="/messages">
+          <button>Messages</button>
+        </Link>
+      </div>
     </div>
   );
 }
